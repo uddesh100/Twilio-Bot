@@ -8,6 +8,9 @@ apiRoutes.use(bodyParser.urlencoded({extended: true}));
 var messagingRoutes = require('./messages/messagesController');
 apiRoutes.use('/message', messagingRoutes);
 
+var newsRoutes = require('./news/newsController');
+apiRoutes.use('/news', newsRoutes);
+
 // HOME ROUTING
 // =============================================================================
 apiRoutes.get('*', function(req, res) {

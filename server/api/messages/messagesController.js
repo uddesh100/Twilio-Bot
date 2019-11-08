@@ -1,23 +1,27 @@
 var express = require('express'),
     messagingRoutes = express.Router(),
-    Message = require('./messagesModel')
+    Message = require('./messagesModel'),
+    News = require('../news/newsModel')
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
+//NEWS API
+//e130320d98d94190b1b9949ac3bf8ac0
+
 messagingRoutes.post('/sms', function(req, res){
-    console.log(req.body);
-    const twiml = new MessagingResponse();
+    //console.log(req.body);
+    News.topheadlines(req.body.Body)
+    .then(articles => {
+        //console.log(articles);
+        const twiml = new MessagingResponse();
 
-    twiml.message('The Robots are coming! Head for the hills!');
+        twiml.message(articles);
 
-    res.writeHead(200, {'Content-Type': 'text/xml'});
-    res.end(twiml.toString());
-    // .then(resut =>{
-    //     res.status(200).send(response);
-    // })
-    // .catch(err =>{
-    //     console.log(err);
-    //     res.status(500).send(err);
-    // });
+        res.writeHead(200, {'Content-Type': 'text/xml'});
+        res.end(twiml.toString());
+    })
+    .catch(err =>{
+        console.log(err);
+    })
 });
 
 messagingRoutes.get('/hello', function(req, res){
